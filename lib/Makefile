@@ -1,8 +1,8 @@
 OCAMLC = ocamlfind ocamlc
 OCAMLOPT = ocamlfind ocamlopt
 OCAMLFLAGS = -annot -g
-PACKS = xmlm,lwt
-PACKS_JS = js_of_ocaml,js_of_ocaml.syntax
+PACKS = xmlm
+PACKS_JS = lwt,js_of_ocaml,js_of_ocaml.syntax
 
 ICAMLP4 = -I $(shell ocamlfind query camlp4) \
 	-I $(shell ocamlfind query type_conv) 
@@ -55,6 +55,9 @@ rpc_client_js_helper.cmo: rpc_client_js_helper.ml
 
 rpc_client_js.cmo: rpc_client_js.ml rpc_client_js_helper.cmo 
 	$(OCAMLC) $(OCAMLFLAGS) -package $(PACKS_JS) -syntax camlp4o $(ICAMLP4_JS) -c $@ $<
+
+rpc_client_js.cmi: rpc_client_js.mli rpc_client_js_helper.cmo
+	$(OCAMLOPT) $(OCAMLFLAGS) -package $(PACKS_JS) -syntax camlp4o $(ICAMLP4_JS) -c rpc_client_js.mli
 
 %.o %.cmx: %.ml
 	$(OCAMLOPT) $(OCAMLFLAGS) -package $(PACKS) -c -o $@ $<
